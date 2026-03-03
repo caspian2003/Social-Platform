@@ -1,0 +1,29 @@
+<h2>Dashboard</h2>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Post</button>
+</form>
+
+<hr>
+
+{% for post in posts %}
+    <p><strong>{{ post.user.username }}</strong>: {{ post.content }}</p>
+    <p>Likes: {{ post.total_likes }}</p>
+
+    <a href="{% url 'like_post' post.id %}">Like/Unlike</a>
+
+    <h4>Comments:</h4>
+    {% for comment in post.comment_set.all %}
+        <p>{{ comment.user.username }}: {{ comment.content }}</p>
+    {% endfor %}
+
+    <form method="post" action="{% url 'add_comment' post.id %}">
+        {% csrf_token %}
+        <input type="text" name="content">
+        <button type="submit">Comment</button>
+    </form>
+
+    <hr>
+{% endfor %}
